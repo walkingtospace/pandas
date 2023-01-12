@@ -601,7 +601,9 @@ class Index(IndexOpsMixin, PandasObject):
     # See each method's docstring.
 
     @classmethod
-    def _simple_new(cls: type[_IndexT], values, name: Hashable = None) -> _IndexT:
+    def _simple_new(
+        cls: type[_IndexT], values: ArrayLike, name: Hashable = None
+    ) -> _IndexT:
         """
         We require that we have a dtype compat for the values. If we are passed
         a non-dtype compat, then coerce using the constructor.
@@ -695,22 +697,6 @@ class Index(IndexOpsMixin, PandasObject):
 
     # --------------------------------------------------------------------
     # Index Internals Methods
-
-    @final
-    def _get_attributes_dict(self) -> dict[str_t, Any]:
-        """
-        Return an attributes dict for my class.
-
-        Temporarily added back for compatibility issue in dask, see
-        https://github.com/pandas-dev/pandas/pull/43895
-        """
-        warnings.warn(
-            "The Index._get_attributes_dict method is deprecated, and will be "
-            "removed in a future version",
-            DeprecationWarning,
-            stacklevel=find_stack_level(),
-        )
-        return {k: getattr(self, k, None) for k in self._attributes}
 
     def _shallow_copy(self: _IndexT, values, name: Hashable = no_default) -> _IndexT:
         """
@@ -880,6 +866,9 @@ class Index(IndexOpsMixin, PandasObject):
         if ufunc.nout == 2:
             # i.e. np.divmod, np.modf, np.frexp
             return tuple(self.__array_wrap__(x) for x in result)
+
+        if result.dtype == np.float16:
+            result = result.astype(np.float32)
 
         return self.__array_wrap__(result)
 
@@ -1958,7 +1947,7 @@ class Index(IndexOpsMixin, PandasObject):
         Return index with requested level(s) removed.
 
         If resulting index has only 1 level left, the result will be
-        of Index type, not MultiIndex.
+        of Index type, not MultiIndex. The original index is not modified inplace.
 
         Parameters
         ----------
@@ -2200,7 +2189,7 @@ class Index(IndexOpsMixin, PandasObject):
         See Also
         --------
         is_integer : Check if the Index only consists of integers.
-        is_floating : Check if the Index is a floating type.
+        is_floating : Check if the Index is a floating type (deprecated).
         is_numeric : Check if the Index only consists of numeric data.
         is_object : Check if the Index is of the object dtype.
         is_categorical : Check if the Index holds categorical data.
@@ -2235,7 +2224,7 @@ class Index(IndexOpsMixin, PandasObject):
         See Also
         --------
         is_boolean : Check if the Index only consists of booleans.
-        is_floating : Check if the Index is a floating type.
+        is_floating : Check if the Index is a floating type (deprecated).
         is_numeric : Check if the Index only consists of numeric data.
         is_object : Check if the Index is of the object dtype.
         is_categorical : Check if the Index holds categorical data.
@@ -2261,6 +2250,9 @@ class Index(IndexOpsMixin, PandasObject):
     def is_floating(self) -> bool:
         """
         Check if the Index is a floating type.
+
+        .. deprecated:: 2.0.0
+            Use `pandas.api.types.is_float_dtype` instead
 
         The Index may consist of only floats, NaNs, or a mix of floats,
         integers, or NaNs.
@@ -2298,6 +2290,12 @@ class Index(IndexOpsMixin, PandasObject):
         >>> idx.is_floating()
         False
         """
+        warnings.warn(
+            f"{type(self).__name__}.is_floating is deprecated."
+            "Use pandas.api.types.is_float_dtype instead",
+            FutureWarning,
+            stacklevel=find_stack_level(),
+        )
         return self.inferred_type in ["floating", "mixed-integer-float", "integer-na"]
 
     @final
@@ -2314,7 +2312,7 @@ class Index(IndexOpsMixin, PandasObject):
         --------
         is_boolean : Check if the Index only consists of booleans.
         is_integer : Check if the Index only consists of integers.
-        is_floating : Check if the Index is a floating type.
+        is_floating : Check if the Index is a floating type (deprecated).
         is_object : Check if the Index is of the object dtype.
         is_categorical : Check if the Index holds categorical data.
         is_interval : Check if the Index holds Interval objects.
@@ -2357,7 +2355,7 @@ class Index(IndexOpsMixin, PandasObject):
         --------
         is_boolean : Check if the Index only consists of booleans.
         is_integer : Check if the Index only consists of integers.
-        is_floating : Check if the Index is a floating type.
+        is_floating : Check if the Index is a floating type (deprecated).
         is_numeric : Check if the Index only consists of numeric data.
         is_categorical : Check if the Index holds categorical data.
         is_interval : Check if the Index holds Interval objects.
@@ -2398,7 +2396,7 @@ class Index(IndexOpsMixin, PandasObject):
         CategoricalIndex : Index for categorical data.
         is_boolean : Check if the Index only consists of booleans.
         is_integer : Check if the Index only consists of integers.
-        is_floating : Check if the Index is a floating type.
+        is_floating : Check if the Index is a floating type (deprecated).
         is_numeric : Check if the Index only consists of numeric data.
         is_object : Check if the Index is of the object dtype.
         is_interval : Check if the Index holds Interval objects.
@@ -2441,7 +2439,7 @@ class Index(IndexOpsMixin, PandasObject):
         IntervalIndex : Index for Interval objects.
         is_boolean : Check if the Index only consists of booleans.
         is_integer : Check if the Index only consists of integers.
-        is_floating : Check if the Index is a floating type.
+        is_floating : Check if the Index is a floating type (deprecated).
         is_numeric : Check if the Index only consists of numeric data.
         is_object : Check if the Index is of the object dtype.
         is_categorical : Check if the Index holds categorical data.
