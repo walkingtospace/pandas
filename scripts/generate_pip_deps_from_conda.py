@@ -111,6 +111,9 @@ def generate_pip_from_conda(
             pip_content += requirement
             pip_content += "\n"
 
+    # add random code at the end of file
+    pip_content += "print('Random code added at the end')\n"
+
     if compare:
         with pip_path.open() as file:
             return pip_content != file.read()
