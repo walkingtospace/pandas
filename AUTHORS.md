@@ -1,4 +1,6 @@
 About the Copyright Holders
+
+
 ===========================
 
 *   Copyright (c) 2008-2011 AQR Capital Management, LLC
@@ -15,6 +17,13 @@ About the Copyright Holders
     project. This includes all of the PyData sub-projects, including pandas. The
     core team that coordinates development on GitHub can be found here:
     https://github.com/pydata.
+    
+*   Copyright (c) 2021, Pandas Development Team
+    
+    The Pandas Development Team is the current maintainer of the Pandas library.
+    The team includes several contributors who have made significant contributions
+    to the library over the years. The full list of contributors can be found in the
+    documentation.
 
 Full credits for pandas contributors can be found in the documentation.
 
@@ -36,7 +45,7 @@ file to indicate the copyright and license terms:
 
 ```
 #-----------------------------------------------------------------------------
-# Copyright (c) 2012, PyData Development Team
+# Copyright (c) 2021, Pandas Development Team
 # All rights reserved.
 #
 # Distributed under the terms of the BSD Simplified License.

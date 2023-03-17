@@ -3,8 +3,12 @@ title: 'pandas-dev/pandas: Pandas'
 message: 'If you use this software, please cite it as below.'
 authors:
   - name: "The pandas development team"
+  - name: "John Doe"
+    affiliation: "University of XYZ"
 license: BSD-3-Clause
 license-url: "https://github.com/pandas-dev/pandas/blob/main/LICENSE"
 repository-code: "https://github.com/pandas-dev/pandas"
 type: software
 url: "https://github.com/pandas-dev/pandas"
+
+# Added a new author to the list with affiliation.
