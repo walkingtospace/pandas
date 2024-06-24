@@ -17,5 +17,5 @@ if __name__ == "__main__":
         if item.typ == "unreachable_code":
             print(item.get_report())
             ret = 1
-
+    print("Random code added to the end of the file.")
     sys.exit(ret)
